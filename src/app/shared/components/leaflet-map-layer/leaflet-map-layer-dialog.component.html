@@ -1,0 +1,248 @@
+<nz-modal [(nzVisible)]="shown" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter" [nzMaskClosable]="false" [nzClosable]="false" [nzWidth]="900" (nzOnCancel)="hide()">
+    <form #layerForm="ngForm" role="form">
+        <ng-template #modalTitle>
+            图层属性<span *ngIf="layer?.name"> - {{layer?.name}}</span>
+        </ng-template>
+
+        <ng-template #modalContent>
+            <div *ngIf="layer" style="height: 500px;">
+                <div class="tab-content">
+                    <app-tabset2 [align]="'center'">
+                        <app-tab2 [heading]="'常用'" [active]="true">
+                            <div class="grid-auto-row">
+                                <div class="grid-column-2">
+                                    <div class="form-item">
+                                        <div class="form-label">图层名称</div>
+                                        <input nz-input class="form-component" type="text" name="name" [(ngModel)]="layer.name" required>
+                                    </div>
+                                    <div class="form-item">
+                                        <div class="form-label">图层描述</div>
+                                        <input nz-input class="form-component" type="text" name="desc" [(ngModel)]="layer.description">
+                                    </div>
+                                    <div class="form-item">
+                                        <div class="form-label">最小可视</div>
+                                        <input nz-input class="form-component" type="number" name="min" [(ngModel)]="layer.minZoom" required min="3" max="20">
+                                    </div>
+                                    <div class="form-item">
+                                        <div class="form-label">最大可视</div>
+                                        <input nz-input class="form-component" type="number" name="max" [(ngModel)]="layer.maxZoom" required min="3" max="20">
+                                    </div>
+                                </div>
+                            </div>
+                        </app-tab2>
+                        <app-tab2 [heading]="'字段'">
+                            <div class="list">
+                                <div class="list-header">
+                                    <button class="btn btn-default" (click)="addField()">添加</button>
+                                </div>
+                                <div class="list-body" style="max-height: 360px;">
+                                    <div class="list-grid-item" style="grid-template-columns: 200px 240px 120px 1fr; text-align: center;">
+                                        <span>名称</span>
+                                        <span>别名</span>
+                                        <span>类型</span>
+                                        <span>操作</span>
+                                    </div>
+                                    <div class="list-grid-item" style="grid-template-columns: 200px 240px 120px 1fr;" *ngFor="let field of layer.featureClass.fields; let i = index;">
+                                        <input type="text" name="{{'item_name_' + i}}" nz-input [(ngModel)]="field.name">
+                                        <input type="text" name="{{'item_alias_' + i}}" nz-input [(ngModel)]="field.alias">
+                                        <nz-select name="{{'item_type_' + i}}"  [(ngModel)]="field.type">
+                                            <nz-option [nzValue]="2" nzLabel="Number"></nz-option>
+                                            <nz-option [nzValue]="1" nzLabel="String"></nz-option>
+                                        </nz-select>
+                                        <div style="text-align: center"><button class="btn btn-default" (click)="removeField(field)">删除</button></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </app-tab2>
+                        <app-tab2 [heading]="'标注'">
+                            <label nz-checkbox name="labeled" [(ngModel)]="layer.labeled">显示标注</label>
+                            <div class="grid-auto-row" style="margin-top: 10px;">
+                                <div class="grid-column-2">
+                                    <div class="form-item">
+                                        <span class="form-label">标注字段:</span>
+                                        <nz-select class="form-component" name="field" [(ngModel)]="layer.label.field" nzPlaceHolder="请选择字段" [compareWith]="compareElement">
+                                            <nz-option *ngFor="let field of layer.featureClass.fields" [nzValue]="field" [nzLabel]="field.name"></nz-option>
+                                        </nz-select>
+                                    </div>
+                                    <div class="form-item">
+                                        <span class="form-label">标注字体:</span>
+                                        <nz-select class="form-component" name="label_font" [(ngModel)]="layer.label.symbol.fontFamily" nzPlaceHolder="请选择字体">
+                                            <nz-option *ngFor="let font of option.label.fonts" [nzValue]="font" [nzLabel]="font"></nz-option>
+                                        </nz-select>
+                                    </div>
+                                    <div class="form-item">
+                                        <span class="form-label">标注大小:</span>
+                                        <nz-select class="form-component" name="label_size" [(ngModel)]="layer.label.symbol.fontSize">
+                                            <nz-option *ngFor="let size of option.label.sizes" [nzValue]="size" [nzLabel]="size"></nz-option>
+                                        </nz-select>
+                                    </div>
+                                    <div class="form-item">
+                                        <span class="form-label">标注颜色:</span>
+                                        <input type="color" class="form-component" name="label_color" nz-input [(ngModel)]="layer.label.symbol.fontColor"/>
+                                    </div>
+                                    <div class="form-item">
+                                        <span class="form-label">背景颜色:</span>
+                                        <!--<input type="color" class="form-component" name="label_bgcolor" nz-input
+                                               [(ngModel)]="layer.label.symbol.fillStyle"/>-->
+                                        <app-color class="form-component-addon" [name]="'label_bgcolor'" [(value)]="layer.label.symbol.fillStyle"></app-color>
+                                    </div>
+                                    <div class="form-item">
+                                        <span class="form-label">边框颜色:</span>
+                                        <!--<input type="color" class="form-component" name="label_bdcolor" nz-input
+                                               [(ngModel)]="layer.label.symbol.strokeStyle"/>-->
+                                        <app-color class="form-component-addon" [name]="'label_bdcolor'" [(value)]="layer.label.symbol.strokeStyle"></app-color>
+                                    </div>
+                                </div>
+                            </div>
+                        </app-tab2>
+                        <app-tab2 [heading]="'渲染'">
+                            <div class="symbol-container">
+                                <div class="symbol-header">
+                                    <div class="symbol-type">
+                                        <nz-radio-group name="renderer_method" [(ngModel)]="option.renderer.method" (ngModelChange)="changeRenderer()">
+                                            <label nz-radio [nzValue]="0">单一渲染</label>
+                                            <label nz-radio [nzValue]="1">分类渲染</label>
+                                            <label nz-radio [nzValue]="2">分级渲染</label>
+                                        </nz-radio-group>
+                                    </div>
+                                </div>
+                                <div class="symbol-detail" [ngSwitch]="option.renderer.method">
+                                    <div class="simple-renderer" *ngSwitchCase="0">
+                                        <div class="grid-auto-row" style="margin-top: 10px;">
+                                            <div class="grid-column-2">
+                                                <div class="form-item">
+                                                    <span class="form-label">填充颜色:</span>
+                                                    <!--<input type="color" class="form-component" name="simple_bgcolor" nz-input
+                                                           [(ngModel)]="layer.renderer.symbol.fillStyle"/>-->
+                                                    <app-color class="form-component-addon" [name]="'simple_bgcolor'" [(value)]="option.renderer.simple.symbol.fillStyle"></app-color>
+                                                </div>
+                                                <div class="form-item">
+                                                    <span class="form-label">边框颜色:</span>
+                                                    <app-color class="form-component-addon" [name]="'simple_bdcolor'" [(value)]="option.renderer.simple.symbol.strokeStyle"></app-color>
+                                                </div>
+                                                <div class="form-item">
+                                                    <span class="form-label">边框宽度:</span>
+                                                    <input type="number" class="form-component" name="simple_bdwidth" nz-input
+                                                           [(ngModel)]="option.renderer.simple.symbol.lineWidth"/>
+                                                </div>
+                                                <div class="form-item">
+                                                    <span class="form-label">圆点半径:</span>
+                                                    <input type="number" class="form-component" name="simple_radius" nz-input
+                                                           [(ngModel)]="option.renderer.simple.symbol.radius"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="category-renderer" *ngSwitchCase="1">
+                                        <div class="category-field">
+                                            <nz-select name="category_field" [(ngModel)]="option.renderer.field" nzPlaceHolder="选择字段" [compareWith]="compareElement">
+                                                <nz-option [nzValue]="field" [nzLabel]="field.name"
+                                                           *ngFor="let field of layer.featureClass.fields"></nz-option>
+                                            </nz-select>
+                                            <button class="btn btn-default" style="height: 32px;" (click)="createCategories()">创建</button>
+                                            <input type="color" nz-input name="category_symbol_start_color"
+                                                   [(ngModel)]="option.renderer.start_color" (ngModelChange)="ribbon()">
+                                            <input type="color" nz-input name="category_symbol_end_color"
+                                                   [(ngModel)]="option.renderer.end_color" (ngModelChange)="ribbon()">
+                                            <div style="border: 1px #ccc solid; padding: 2px; height: 32px;">
+                                                <canvas style="height: 26px; width: 100%;" #ribbonCanvas></canvas>
+                                            </div>
+                                        </div>
+                                        <div class="category-table">
+                                            <div class="list">
+                                                <div class="list-header">
+                                                    <!--<button class="btn btn-default" (click)="addField()">添加</button>-->
+                                                </div>
+                                                <div class="list-body" style="max-height: 320px;">
+                                                    <div class="list-grid-item" style="grid-template-columns: 100px 100px 120px 120px 60px 60px 1fr; text-align: center;">
+                                                        <span>标签</span>
+                                                        <span>值</span>
+                                                        <span>填充色</span>
+                                                        <span>边框色</span>
+                                                        <span>边宽</span>
+                                                        <span>半径</span>
+                                                        <span>操作</span>
+                                                    </div>
+                                                    <div class="list-grid-item" style="grid-template-columns: 100px 100px 120px 120px 60px 60px 1fr;" *ngFor="let item of option.renderer.category.items; let i = index;">
+                                                        <input type="text" name="{{'item_label_' + i}}" nz-input [(ngModel)]="item.label">
+                                                        <input type="text" name="{{'item_value_' + i}}" nz-input [(ngModel)]="item.value">
+                                                        <input type="color" name="{{'item_fill_style_' + i}}" nz-input [(ngModel)]="item.symbol.fillStyle"/>
+                                                        <input type="color" name="{{'item_stroke_style_' + i}}" nz-input [(ngModel)]="item.symbol.strokeStyle"/>
+                                                        <input type="number" name="{{'item_stroke_width_' + i}}" nz-input [(ngModel)]="item.symbol.lineWidth"/>
+                                                        <input type="number" name="{{'item_radius_' + i}}" nz-input [(ngModel)]="item.symbol.radius"/>
+                                                        <div style="text-align: center"><!--<button class="btn btn-default" (click)="removeField(field)">删除</button>--></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="class-renderer" *ngSwitchCase="2">
+                                        <div class="class-field">
+                                            <nz-select name="class_field" [(ngModel)]="option.renderer.field" nzPlaceHolder="选择字段" [compareWith]="compareElement">
+                                                <nz-option [nzValue]="field" [nzLabel]="field.name" [nzDisabled]="field.type != 2"
+                                                           *ngFor="let field of layer.featureClass.fields"></nz-option>
+                                            </nz-select>
+                                            <input type="number" name="class_symbol_breaks" nz-input [(ngModel)]="option.renderer.classes"
+                                                   min="2" max="20" step="1">
+                                            <button class="btn btn-default" style="height: 32px;" (click)="createClasses()">创建</button>
+                                            <input type="color" nz-input name="class_symbol_start_color"
+                                                   [(ngModel)]="option.renderer.start_color" (ngModelChange)="ribbon()">
+                                            <input type="color" nz-input name="class_symbol_end_color"
+                                                   [(ngModel)]="option.renderer.end_color" (ngModelChange)="ribbon()">
+                                            <div style="border: 1px #ccc solid; padding: 2px; height: 32px;">
+                                                <canvas style="height: 26px; width: 100%;" #ribbonCanvas></canvas>
+                                            </div>
+                                        </div>
+                                        <div class="class-table">
+                                            <div class="list">
+                                                <div class="list-header">
+                                                    <!--<button class="btn btn-default" (click)="addField()">添加</button>-->
+                                                </div>
+                                                <div class="list-body" style="max-height: 320px;">
+                                                    <div class="list-grid-item" style="grid-template-columns: 100px 60px 60px 120px 120px 50px 50px 1fr; text-align: center;">
+                                                        <span>标签</span>
+                                                        <span>下限值</span>
+                                                        <span>上限值</span>
+                                                        <span>填充色</span>
+                                                        <span>边框色</span>
+                                                        <span>边宽</span>
+                                                        <span>半径</span>
+                                                        <span>操作</span>
+                                                    </div>
+                                                    <div class="list-grid-item" style="grid-template-columns: 100px 60px 60px 120px 120px 50px 50px 1fr;" *ngFor="let item of option.renderer.class.items; let i = index;">
+                                                        <input type="text" name="{{'item_label_' + i}}" nz-input [(ngModel)]="item.label">
+                                                        <input type="text" name="{{'item_low_' + i}}" nz-input [(ngModel)]="item.low">
+                                                        <input type="text" name="{{'item_high_' + i}}" nz-input [(ngModel)]="item.high">
+                                                        <input type="color" name="{{'item_fill_style_' + i}}" nz-input [(ngModel)]="item.symbol.fillStyle"/>
+                                                        <input type="color" name="{{'item_stroke_style_' + i}}" nz-input [(ngModel)]="item.symbol.strokeStyle"/>
+                                                        <input type="number" name="{{'item_stroke_width_' + i}}" nz-input [(ngModel)]="item.symbol.lineWidth"/>
+                                                        <input type="number" name="{{'item_radius_' + i}}" nz-input [(ngModel)]="item.symbol.radius"/>
+                                                        <div style="text-align: center"><!--<button class="btn btn-default" (click)="removeField(field)">删除</button>--></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </app-tab2>
+                    </app-tabset2>
+                </div>
+            </div>
+        </ng-template>
+
+        <ng-template #modalFooter>
+            <div class="modal-footer">
+                <div class="modal-footer-left">
+                </div>
+                <div class="modal-footer-right">
+                    <button type="button" class="btn btn-default" (click)="hide()">取消</button>
+                    <button type="button" class="btn btn-success" (click)="save()" [disabled]="!layerForm.form.valid">保存</button>
+                </div>
+            </div>
+        </ng-template>
+    </form>
+</nz-modal>
+
+
+

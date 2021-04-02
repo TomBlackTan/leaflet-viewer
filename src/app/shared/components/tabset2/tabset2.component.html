@@ -1,0 +1,10 @@
+<div class="tab-heading">
+    <ul [ngStyle]="{ 'text-align' : align }">
+        <li *ngFor="let tab of tabs" [ngClass]="{'active': tab.active}" [hidden]="!tab.visible">
+            <a (click)="active(tab)">{{tab.heading}}<span class="badge tab-badge" *ngIf="tab.badge">{{tab.badge}}</span></a>
+        </li>
+    </ul>
+</div>
+<div class="tab-content">
+    <ng-content></ng-content>
+</div>

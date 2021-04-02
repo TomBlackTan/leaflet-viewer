@@ -1,0 +1,24 @@
+.list {
+  height: 100%;
+  background-color: #fff;
+}
+.list-body{
+  padding: 0px 10px;
+}
+.list-group-body {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  background-color: #fff;
+}
+
+.list-grid-item {
+  grid-template-columns:  1fr auto;
+  grid-gap: 5px;
+  padding-left: 30px;
+}
+
+[nz-checkbox] {
+  height: 42px;
+  line-height: 42px;
+}

@@ -1,0 +1,38 @@
+.module-header {
+    height: 70px;
+    grid-template-columns: auto 1fr auto;
+}
+.module-body {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 300px 1fr;
+}
+.module-body-1 {
+    grid-template-rows: 1fr;
+    grid-template-areas: "a b";
+}
+.module-body-2 {
+    grid-template-rows: 1fr 400px;
+    grid-template-areas: "a b"
+                            "a c";
+}
+.module-footer {
+    justify-content: center;
+}
+
+.legend-label{
+    color: #636363;
+}
+
+.legend-label-checked{
+    color: var(--font-primary-color);
+}
+
+.img-gray {
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+    filter: grayscale(100%);
+}
+
+

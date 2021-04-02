@@ -1,0 +1,27 @@
+<div class="list no-select">
+    <div class="list-header">
+        <span style="font-size: 14px;">图层列表</span>
+    </div>
+    <div class="list-body">
+        <div class="list-group" *ngFor="let layer of layerService.layers">
+            <div class="list-group-body">
+                <label nz-checkbox [(ngModel)]="layer.visible" (ngModelChange)="switch(layer) ">{{layer.name}}</label>
+                <a nz-dropdown [nzDropdownMenu]="menu"><i class="fas fa-ellipsis-h" style="cursor: pointer"></i></a>
+                <nz-dropdown-menu #menu="nzDropdownMenu">
+                    <ul nz-menu>
+                        <li nz-menu-item (click)="up(layer)">向上移动</li>
+                        <li nz-menu-item (click)="down(layer)">向下移动</li>
+                        <nz-divider style="margin: 0;"></nz-divider>
+                        <li nz-menu-item (click)="remove(layer)">移除图层</li>
+                        <!--<nz-divider style="margin: 0;"></nz-divider>
+                        <li nz-menu-item (click)="layerDialog.show(layer)">图层属性</li>-->
+                    </ul>
+                </nz-dropdown-menu>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--
+<green-map-layer-dialog #layerDialog></green-map-layer-dialog>-->

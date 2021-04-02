@@ -1,0 +1,86 @@
+
+.form-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    justify-items: start;
+    align-items: center;
+    min-height: 34px;
+
+    .form-label {
+        padding: 0.3em 0.6em;
+        margin-bottom: 0px;
+        font-weight: 700;
+        line-height: 1;
+        color: rgb(6, 47, 140);
+        text-align: left;
+        font-size: 12px;
+        width: 120px;
+    }
+
+    .form-label-lg {
+        width: 150px;
+    }
+
+    .form-label-sm {
+        width: 75px;
+    }
+
+    .form-component {
+        position: relative;
+        width: 100%;
+        overflow-x: hidden;
+        color: rgb(0, 0, 0);
+        text-align: left;
+    }
+
+    .form-component-addon{
+        position: relative;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        min-height: 34px;
+        align-items: center;
+        border: 1px solid rgb(185, 185, 185);
+        border-radius: 4px;
+        .form-component {
+            position: relative;
+            width: 100%;
+            overflow-x: hidden;
+            text-align: left;
+            padding: 5px 10px;
+            input {
+                border: 0px;
+            }
+            /*label {
+                padding-left: 10px;
+            }
+            span {
+                padding-left: 10px;
+            }*/
+        }
+        input.form-component {
+            border: 0px;
+        }
+        label.form-component {
+            padding-left: 10px;
+        }
+        span.form-component {
+            padding-left: 10px;
+        }
+        .form-addon{
+            width: 100%;
+            height: 100%;
+            /*button {
+                border: 0px;
+            }*/
+            i {
+                width: 30px;
+                padding: 8px;
+                text-align: center;
+            }
+        }
+    }
+}
+
+
+

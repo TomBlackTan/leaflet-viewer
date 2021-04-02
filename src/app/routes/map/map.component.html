@@ -1,0 +1,77 @@
+<div class="module-content">
+    <div class="module-header">
+        <img style="height: 50px;" src="assets/img/common/logo.svg"/>
+        <span style="font-size: 24px;">Leaflet Viewer</span>
+        <button class="btn btn-default" style="position: relative;"><input type="file" style="width: 100%; height: 100%; opacity: 0; position: absolute; z-index: 1; top: 0; left: 0;" (change)="open($event)" /><i class="fas fa-folder-open"></i> GeoJSON</button>
+    </div>
+    <div class="module-body module-body-1">
+        <leaflet-map-layer style="grid-area: a;" [map]="map"></leaflet-map-layer>
+        <div class="map-container" style="position: relative; grid-area: b;">
+            <div class="panel panel-toolbar" style="position: absolute; top: 10px; left: 10px;">
+                <button nz-dropdown [nzDropdownMenu]="menu0" class="btn btn-default"><i class="fas fa-map"></i> 底图</button>
+                <nz-dropdown-menu #menu0="nzDropdownMenu">
+                    <app-amap-switch [mapType]="'street'" [amap]="amap"></app-amap-switch>
+                </nz-dropdown-menu>
+            </div>
+            <leaflet-map-control (mapInit)="mapInit($event)"></leaflet-map-control>
+        </div>
+    </div>
+    <div class="module-footer" style="text-align: center; height: 40px;">
+        Copyright © 2021-2025 版权所有 ICP证：京ICP备15010239号-2
+    </div>
+
+<!--    <div class="panel panel-toolbar" style="position: absolute; top: 10px; left: 70px;">
+        <button nz-dropdown [nzDropdownMenu]="menu" class="btn btn-default"><i class="fas fa-folder-open"></i> 打开</button>
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu>
+                <li nz-menu-item><input type="file" style="width: 150px; opacity: 0; position: absolute; z-index: 1;" (change)="openGeoJSON($event)" />GeoJSON</li>
+                &lt;!&ndash;<li nz-menu-item>Excel</li>&ndash;&gt;
+            </ul>
+        </nz-dropdown-menu>
+        <button nz-dropdown [nzDropdownMenu]="menu0" class="btn btn-default"><i class="fas fa-map"></i> 底图</button>
+        <nz-dropdown-menu #menu0="nzDropdownMenu">
+            <app-amap-switch [mapType]="'street'" [amap]="amap"></app-amap-switch>
+        </nz-dropdown-menu>
+        <button nz-dropdown [nzDropdownMenu]="menu2" class="btn btn-default"><i class="fas fa-server"></i> 图层</button>
+        <nz-dropdown-menu #menu2="nzDropdownMenu">
+            <green-map-layer [map]="map"></green-map-layer>
+        </nz-dropdown-menu>
+        &lt;!&ndash;<button nz-dropdown [nzDropdownMenu]="menu1" class="btn btn-default"><i class="fas fa-map"></i> 量算</button>
+      <nz-dropdown-menu #menu1="nzDropdownMenu">
+          <green-map-measure [map]="map"></green-map-measure>
+      </nz-dropdown-menu>
+      <button nz-dropdown [nzDropdownMenu]="menu3" class="btn btn-default"><i class="fas fa-tag"></i> 标注</button>
+      <nz-dropdown-menu #menu3="nzDropdownMenu">
+          <green-map-label #lmapLabel></green-map-label>
+      </nz-dropdown-menu>
+      <button nz-dropdown [nzDropdownMenu]="menu4" class="btn btn-default"><i class="fas fa-search"></i> 查询</button>
+      <nz-dropdown-menu #menu4="nzDropdownMenu">
+          <green-map-search #lmapSearch (onFeatureClick)="onFeatureClick($event)"></green-map-search>
+      </nz-dropdown-menu>
+      <button nz-dropdown [nzDropdownMenu]="menu5" class="btn btn-default"><i class="fas fa-cog"></i> 专题</button>
+      <nz-dropdown-menu #menu5="nzDropdownMenu">
+          <green-map-thematic #lmapThematic (onFeatureClick)="onFeatureClick($event)"></green-map-thematic>
+      </nz-dropdown-menu>&ndash;&gt;
+    </div>-->
+
+</div>
+
+
+<div class="panel panel-grid" style="width: 400px; height: 300px; padding-top: 10px; z-index: 2; box-shadow: none;" #template [hidden]="!feature">
+    <div class="panel-heading">
+        <span class="panel-title">要素属性</span>
+    </div>
+    <div class="panel-body"  *ngIf="feature">
+        <div class="grid-column-2">
+            <div class="form-item" *ngFor="let item of feature.properties | keyvalue : originalOrder">
+                <div class="form-label">{{item.key}}：</div>
+                <div class="form-component text-fixed-width" nz-tooltip [nzTitle]="item.value">{{item.value}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <div class="panel-footer-right">
+            <button class="btn btn-default btn-xs" style="width: 60px;" (click)="close()">关闭</button>
+        </div>
+    </div>
+</div>
