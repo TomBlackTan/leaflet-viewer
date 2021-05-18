@@ -1,0 +1,57 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "东北角"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.49902343749999,
+          39.990799335838034
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "西北角"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.22711181640625,
+          39.99500778093748
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "西南角"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.26556396484374,
+          39.78110197709871
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "东南角"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.510009765625,
+          39.82752244475985
+        ]
+      }
+    }
+  ]
+}
